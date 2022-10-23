@@ -1,0 +1,16 @@
+.nav {
+  grid-area: n;
+  background-color: rgb(255, 237, 99);
+  padding: 30px;
+}
+
+.elem {
+  color: rgb(255, 25, 25);
+  text-decoration: none;
+}
+
+.elem .activeLink {
+  color: rgb(38, 0, 255);
+  cursor: default;
+  text-decoration: none;
+}

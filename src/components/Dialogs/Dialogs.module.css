@@ -1,0 +1,19 @@
+.dialogs {
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+    text-decoration: none;
+}
+
+.dialog {
+    padding: 10px;
+}
+
+.activeLink {
+    color: red;
+    text-decoration: none;
+}
+
+.message {
+    color: white;
+    padding: 10px;
+}
