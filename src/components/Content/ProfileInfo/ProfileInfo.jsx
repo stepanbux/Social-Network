@@ -2,6 +2,7 @@ import React from 'react';
 import s from './ProfileInfo.module.css'
 import userPhoto from '../../../assets/images/userPhoto.png'
 import Preloaded from '../../common/Prereloaded';
+import ProfileStatus from './ProfileStatus'
 
 const ProfileInfo = (props) => {
     if (!props.profile) {
@@ -13,6 +14,7 @@ const ProfileInfo = (props) => {
                 <div className={s.name}>
                    {props.profile.fullName}
                 </div>
+                <ProfileStatus status={'Че каво?'}/>
             </div>
         );
     }
