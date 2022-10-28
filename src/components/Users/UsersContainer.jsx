@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
-import { follow, getUsersThunkCreator, setCurrentPageAC, toggleFollowingProgress, unfollow } from '../components/redux/users-reducer';
+import { follow, getUsersThunkCreator, setCurrentPageAC, toggleFollowingProgress, unfollow } from '../redux/users-reducer';
 import React from 'react';
-import Users from './Users';
-import Preloaded from '../components/common/Prereloaded';
-import { withAuthRedirect } from '../hoc/WithAuthRedirect';
+import Users from '../Users/Users';
+import Preloaded from '../common/Prereloaded';
+import { withAuthRedirect } from '../../hoc/WithAuthRedirect';
 import { compose } from 'redux';
 
 
