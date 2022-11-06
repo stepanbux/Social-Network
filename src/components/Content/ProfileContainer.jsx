@@ -6,14 +6,13 @@ import { useParams } from 'react-router-dom';
 import { compose } from 'redux';
 import { withAuthRedirect } from '../../hoc/WithAuthRedirect';
 
-
-class ProfileContainer extends React.Component{
+class ProfileContainer extends React.Component {
 
     componentDidMount() {
         
         let userId = this.props.match.params.userId;
         if (!userId) {
-            userId = 26047;
+            userId = this.props.userIdAuth;
         }
         this.props.setUser(userId);
         this.props.getStatus(userId);
@@ -21,28 +20,30 @@ class ProfileContainer extends React.Component{
 
     render() {
         return (
-            <Profile {...this.props} profile={this.props.profile} 
-            status={this.props.status} updateStatus={this.props.updateStatus}/>
+            <Profile {...this.props} profile={this.props.profile}
+                status={this.props.status} updateStatus={this.props.updateStatus} />
         );
     }
 }
 
-export function withRouter(Children){
-    return(props)=>{
-       const match  = {params: useParams()};
-       return <Children {...props}  match = {match}/>
-   }
+export function withRouter(Children) {
+    return (props) => {
+        const match = { params: useParams() };
+        return <Children {...props} match={match} />
+    }
 }
 
 let mapStateToProps = (state) => {
     return {
         profile: state.profilePage.profile,
-        status: state.profilePage.status
+        status: state.profilePage.status,
+        userIdAuth: state.auth.id,
+        isAuth: state.auth.isAuth
     }
 }
 
 export default compose(
-    connect (mapStateToProps, {setUser, getStatus, updateStatus}),
+    connect(mapStateToProps, { setUser, getStatus, updateStatus }),
     withRouter,
-    //withAuthRedirect 
+    withAuthRedirect
 )(ProfileContainer)

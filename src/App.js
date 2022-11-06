@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import ProfileContainer from './components/Content/ProfileContainer';
+import ProfileContainer, { withRouter } from './components/Content/ProfileContainer';
 import DialogsContainer from './components/Dialogs/DialogsContainer';
 import HeaderContainer from './components/Header/HeaderContainer';
 import Login from './components/Login/Login';
 import Nav from './components/Nav/Nav';
 import UsersContainer from './components/Users/UsersContainer';
+import { initialize } from './components/redux/app-reducer'
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import Preloaded from './components/common/Prereloaded';
 
-
-const App = (props) => {
-
-  return (
+class App extends Component {
+  componentDidMount() {
+    this.props.initialize();
+  }
+  render() {
+    if (!this.props.initialized) {
+      return <Preloaded />
+    }
+    return (
       <div className='app-wrapper'>
         <HeaderContainer />
         <Nav />
@@ -25,7 +34,17 @@ const App = (props) => {
           </Routes>
         </div>
       </div>
-  );
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    initialized: state.app.initialized
+  }
+}
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, { initialize }))(App)
+

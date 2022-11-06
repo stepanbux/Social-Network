@@ -29,11 +29,22 @@ export const userAPI = {
             .then(response => response.data)
     },
     getStatus: (id) => {
-        return instance.get(`profile/status/${id}`)
+        return instance.get(`profile/status/${id}`);
     },
     updateStatus: (status) => {
-        return instance.put('profile/status',{
+        return instance.put('profile/status', {
             status: status
         });
+    },
+    login: (email, password, rememberMe = false, captcha) => {
+        return instance.post('auth/login', {
+            email, password, rememberMe, captcha
+        });
+    },
+    logout: () => {
+        return instance.delete('auth/login');
+    },
+    captcha: () => {
+        return instance.get('security/get-captcha-url');
     }
 }

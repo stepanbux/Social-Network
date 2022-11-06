@@ -13,45 +13,26 @@ let newState = {
             { id: 2, message: 'How are you?' },
             { id: 3, message: 'What do you will do tomorrow?' }
         ],
-    newMessageBody: 'snofva sosat'
 }
 
 const messageReducer = (state = newState, action) => {
 
     switch (action.type) {
-        case 'UPDATE_NEW_MESSAGE_BODY': {
-            let stateCopy = { ...state };
-
-            stateCopy.newMessageBody = action.newText;
-            return stateCopy;
-        }
         case 'SEND_MESSAGE': {
-            let newMessage = {
-                id: 4,
-                message: state.newMessageBody
-            };
-            let stateCopy = { ...state };
-            stateCopy.messages = [...state.messages]
-            stateCopy.messages.push(newMessage);
-            stateCopy.newMessageBody = '';
-
-            return stateCopy;
+            return {
+                ...state,
+                messages: [...state.messages, {id: 4, message: action.newMessage}]
+            }
         }
         default:
             return state;
     }
 }
 
-export const updateNewMessageActionCreate = (text) => {
-    return {
-        type: 'UPDATE_NEW_MESSAGE_BODY',
-        newText: text
-    }
-}
-
-export const addNewMessageActionCreator = (text) => {
+export const addNewMessageActionCreator = (newMessage) => {
     return {
         type: 'SEND_MESSAGE',
+        newMessage
     }
 }
 

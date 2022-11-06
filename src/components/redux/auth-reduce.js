@@ -1,10 +1,12 @@
 import { userAPI } from "../../api/api";
+import { stopSubmit } from 'redux-form'
 
 let initialState = {
     id: null,
     email: null,
     login: null,
-    isAuth: false
+    isAuth: false,
+    url: ''
 }
 
 const authReducer = (state = initialState, action) => {
@@ -12,15 +14,16 @@ const authReducer = (state = initialState, action) => {
         case 'SET_USER_DATA':
             return {
                 ...state,
-                ...action.data.data,
-                isAuth: true,
+                ...action.data,
+                isAuth: action.isAuth,
+                url: ''
             }
 
-        case 'SET_USER_NAME':
+        case 'USER_CAPTCHA':
             return {
                 ...state,
-                ...action.data.data,
-                login: action.data.login
+                ...action.data,
+                url: action.url
             }
 
         default:
@@ -28,31 +31,55 @@ const authReducer = (state = initialState, action) => {
     }
 }
 
-export const setUserData = (data) => {
+export const setUserData = (data, isAuth) => {
     return {
         type: 'SET_USER_DATA',
-        data
+        data,
+        isAuth
     }
 }
 
-export const setUserName = (data) => {
+export const userCaptcha = (url) => {
     return {
-        type: 'SET_USER_NAME',
-        data
+        type: 'USER_CAPTCHA',
+        url
     }
 }
 
-export const authMe = (dispatch) => {
-    return ( (dispatch) => {
-        userAPI.authMyAcc().then(response => {
-            if (response.data.resultCode === 0) {
-                dispatch(setUserData(response.data.data));
-            }
-            if (response.data.data.login != null) {
-                dispatch(setUserName(response.data.data));
-            }
-        })
-    })
+export const captchaUser = () => async (dispatch) => {
+    let response = await userAPI.captcha();
+    dispatch(userCaptcha(response.data.url));
+}
+
+export const authMe = () => async (dispatch) => {
+    let response = await userAPI.authMyAcc()
+    if (response.data.resultCode === 0) {
+        dispatch(setUserData(response.data.data, true));
+    }
+}
+
+export const login = (email, password, rememberMe, captcha) => async (dispatch) => {
+    let response = await userAPI.login(email, password, rememberMe, captcha);
+    if (response.data.resultCode === 0) {
+        dispatch(authMe())
+    }
+    if (response.data.resultCode === 10) {
+        dispatch(captchaUser())
+    } else {
+        dispatch(stopSubmit('login', { _error: response.data.messages }))
+    }
+}
+
+
+export const logout = () => async (dispatch) => {
+    let response = await userAPI.logout()
+    if (response.data.resultCode === 0) {
+        dispatch(setUserData({
+            id: null,
+            email: null,
+            login: null
+        }, false))
+    }
 }
 
 export default authReducer;
